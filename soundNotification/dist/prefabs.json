@@ -1,0 +1,1 @@
+[{"name":"soundNotification","icon":"ParagraphIcon","category":"CUSTOM","structure":[{"name":"soundNotification","options":[{"type":"VARIABLE","label":"MP3 url","key":"url","value":["Enter mp3 url..."],"configuration":{"as":"MULTILINE"}}],"descendants":[],"hash":"60b70c768ffd0e7f20981db0a360e48381a6985a2d5b7aca0bfaa327046aa7b6"}]}]
