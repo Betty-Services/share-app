@@ -1,21 +1,23 @@
-# Betty Blocks Component Set
+# Sound notification component
 
-Betty Blocks Component Sets can be used to create Betty Blocks custom components and use these in the Page Builder.
+This component allows you to trigger a sound notification with the use of an interaction.
+For exmaple on a button click. a form submit or any other interaction that is availible. 
+ 
+# How to use
 
-For documentation of the Betty Blocks Component System see: https://github.com/bettyblocks/cli/wiki
+1. Drag the sound notification component on your page. 
+In development mode your component will look like this:
 
-To get started see: https://github.com/bettyblocks/cli/wiki/Usage#start-the-development-server
+![image](https://user-images.githubusercontent.com/58258518/159273810-6bc20515-a195-46ec-8c05-1b912b75b7a5.png)
 
-## TLDR; Local development
+(In runtime the user will not see anything on the page. The component is then hidden)
 
-1. Install dependencies
 
-```bash
-$ yarn
-```
+2. The component has an option to fill in a url that host the sound file. You use different type of extensions for exmaple .mp3 or .wav
+Fill in the url that contains the sound that you want to be played
 
-2. Build + watch
+![image](https://user-images.githubusercontent.com/58258518/159275073-e7cef388-2ddd-4271-9000-bec1657944aa.png)
 
-```bash
-$ yarn dev
-```
+3. Create a new interaction on any component that you want to use to trigger the sound notification. For exmaple when a button is clicked
+
+![image](https://user-images.githubusercontent.com/58258518/159275403-b688591d-b5d5-4147-836c-eb563233aa01.png)
