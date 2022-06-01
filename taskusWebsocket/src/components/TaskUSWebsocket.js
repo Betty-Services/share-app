@@ -36,9 +36,9 @@
                       B.triggerEvent('onUserError', error);
                     }
                     if (data && data.id) {
-                      const webuser_id = data.id;
+                      const webuserId = data.id;
                       const socket = new WebSocket(
-                        `${socketurl}?appid=${artifact.applicationId}&pageid=${PageID.id}?userid=${webuser_id}`,
+                        `${socketurl}?appid=${artifact.applicationId}&pageid=${PageID.id}?userid=${webuserId}`,
                       );
                     } 
                   }}
