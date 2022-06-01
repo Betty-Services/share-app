@@ -1,0 +1,1 @@
+[{"name":"SocketRefetcher","icon":"ContainerIcon","category":"CONTENT","structure":[{"name":"SocketRefetcher","options":[{"type":"AUTHENTICATION_PROFILE","label":"Auth profile","key":"authProfile","value":""}],"descendants":[],"hash":"644fd3270e85119d138434c034a4af2753e14cd3c487a38330990d2964ec321a"}]}]
