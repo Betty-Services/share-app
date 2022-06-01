@@ -7,7 +7,6 @@
     <div>
       {(() => {
         const { env, GetMe } = B;
-
         const isEmpty = children.length === 0;
         const isDev = env === 'dev';
         const isPristine = isEmpty && isDev;
@@ -17,7 +16,6 @@
         const socketInteraction = () => {
           B.triggerEvent('onSocketInteraction');
         };
-
 
         let poll;
         const Component = () => {
@@ -39,7 +37,6 @@
                     }
                     if (data && data.id) {
                       const webuser_id = data.id;
-                      console.log('websocket with userID')
                       const socket = new WebSocket(
                         `${socketurl}?appid=${artifact.applicationId}&pageid=${PageID.id}?userid=${webuser_id}`,
                       );
