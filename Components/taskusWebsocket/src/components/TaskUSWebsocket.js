@@ -38,7 +38,7 @@
                     if (data && data.id) {
                       const webuserId = data.id;
                       const socket = new WebSocket(
-                        `${socketurl}?appid=${artifact.applicationId}&pageid=${PageID.id}?userid=${webuserId}`,
+                        `${socketurl}?appid=${artifact.applicationId}&pageid=${PageID.id}&userid=${webuserId}`,
                       );
                     } 
                   }}
