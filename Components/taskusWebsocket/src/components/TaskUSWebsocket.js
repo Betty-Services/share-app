@@ -1,7 +1,7 @@
 (() => ({
   name: 'SocketRefetcher',
   type: 'BODY_COMPONENT',
-  allowedTypes: ['BODY_COMPONENT', 'CONTAINER_COMPONENT', 'CONTENT_COMPONENT'],
+  allowedTypes: [],
   orientation: 'HORIZONTAL',
   jsx: (
     <div>
@@ -12,49 +12,34 @@
         const isPristine = isEmpty && isDev;
         const { authProfile } = options;
 
-        const socketurl = 'wss://taskusws.com';
+        const SOCKET_URL = 'wss://taskusws.com';
+        const RETRY_TIMEOUT = 10000;
         const socketInteraction = () => {
           B.triggerEvent('onSocketInteraction');
         };
 
-        let poll;
-        const Component = () => {
-          if (!isDev) {
-            const PageID = Object.values(window.artifact.endpoints).filter(
-              obj => obj.url === window.location.pathname,
-            )[0];
+        const [userId, setUserId] = useState(null);
 
-            // Create WebSocket connection.
-            if (authProfile) {
-              return (
-                <GetMe authenticationProfileId={authProfile}>
-                  {({ error, loading, data }) => {
-                    if (loading) {
-                      B.triggerEvent('onUserLoad');
-                    }
-                    if (error) {
-                      B.triggerEvent('onUserError', error);
-                    }
-                    if (data && data.id) {
-                      const webuserId = data.id;
-                      const socket = new WebSocket(
-                        `${socketurl}?appid=${artifact.applicationId}&pageid=${PageID.id}&userid=${webuserId}`,
-                      );
-                    } 
-                  }}
-                </GetMe>
-              );
-            }
-            else {
-              const socket = new WebSocket(
-                `${socketurl}?appid=${artifact.applicationId}&pageid=${PageID.id}`,
-              );
-            }
+        const pageId = window.artifact
+          ? Object.values(window.artifact.endpoints).find(
+              obj => obj.url === window.location.pathname,
+            ).id
+          : null;
+
+        const applicationId = window.artifact
+          ? window.artifact.applicationId
+          : null;
+
+        const initializeSocket = async (timeOut = 0) => {
+          await setTimeout(() => {
+            const socketUrl = `${SOCKET_URL}?appid=${applicationId}&pageid=${pageId}${
+              userId ? `&userid=${userId}` : ''
+            }`;
+            const socket = new WebSocket(socketUrl);
 
             // Connection opened
             socket.addEventListener('open', event => {
               console.log('connected to WS server');
-              clearTimeout(poll);
             });
             // Listen for messages
             socket.addEventListener('message', event => {
@@ -66,26 +51,50 @@
             });
             // On connection closed
             socket.addEventListener('close', event => {
-              setTimeout(Component, 10000);
-              poll = setTimeout(socketInteraction, 30000);
+              // retry connection of websocket every 10 seconds
+              initializeSocket(RETRY_TIMEOUT);
               console.log('The connection has been closed successfully.');
             });
-          }
-          return (
-            <>
-              <div
-                className={[
-                  isEmpty ? classes.empty : '',
-                  isPristine ? classes.pristine : '',
-                  !isDev ? classes.frontEnd : '',
-                ].join(' ')}
-              >
-                {isPristine ? 'SocketRefetcher' : children}
-              </div>
-            </>
-          );
+          }, timeOut);
         };
-        return <Component />;
+
+        useEffect(() => {
+          if (!isDev) {
+            if ((authProfile && userId) || !authProfile) {
+              initializeSocket();
+            }
+          }
+        }, [userId, authProfile]);
+
+        if (authProfile && !isDev) {
+          return (
+            <GetMe authenticationProfileId={authProfile}>
+              {({ error, loading, data }) => {
+                if (loading) {
+                  B.triggerEvent('onUserLoad');
+                }
+                if (error) {
+                  B.triggerEvent('onUserError', error);
+                }
+                if (data && data.id) {
+                  setUserId(data.id);
+                }
+              }}
+            </GetMe>
+          );
+        }
+
+        return (
+          <div
+            className={[
+              isEmpty ? classes.empty : '',
+              isPristine ? classes.pristine : '',
+              !isDev ? classes.frontEnd : '',
+            ].join(' ')}
+          >
+            {isPristine ? 'SocketRefetcher' : null}
+          </div>
+        );
       })()}
     </div>
   ),
